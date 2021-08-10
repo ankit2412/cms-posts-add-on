@@ -1,0 +1,7 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+.edit-php.post-type-post .export-posts.disable{pointer-events: none;cursor: default;}
+.edit-php.post-type-post .loader{display: inline-block;width: 78px;}
+.edit-php.post-type-post .loader:before{height: 16px;width: 16px;display: inline-block;margin-left: .5em;margin-top: -.5em;content: "";-webkit-animation: none;-moz-animation: none;animation: none;background-image: url(../images/wpspin.gif);background-position: center center;background-size: cover;line-height: 1;text-align: center;font-size: 2em;}
