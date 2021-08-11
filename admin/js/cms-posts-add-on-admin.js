@@ -6,7 +6,7 @@ $(document).ready(function( $ ) {
 
 	var posts_screen	= $( '.edit-php.post-type-post' ),
 	title_action		= posts_screen.find( '.page-title-action:first' );
-	title_action.after('<a href="#" class="page-title-action export-posts" data-export_type="Csv">'+cms_export_posts_admin.labels.export_posts+'</a><a href="#" class="page-title-action export-posts" data-export_type="Xlsx">'+cms_export_posts_admin.labels.export_posts_xlsx+'</a>');
+	title_action.after('<a href="#" class="page-title-action export-posts" data-export_type="Csv">'+cms_export_posts_admin.labels.export_posts+'</a><a href="#" class="page-title-action export-posts" data-export_type="Xlsx">'+cms_export_posts_admin.labels.export_posts_xlsx+'</a><a href="#" class="page-title-action export-posts" data-export_type="Pdf">'+cms_export_posts_admin.labels.export_posts_tcpdf+'</a>');
 
 	$('.edit-php.post-type-post .export-posts').on('click', function(e){
 		e.preventDefault();
@@ -47,7 +47,7 @@ $(document).ready(function( $ ) {
 				var url = window.URL || window.webkitURL;
 				link = url.createObjectURL(blob);
 				var a = $("<a />");
-				a.attr("download", 'posts-'+export_time+'.'+export_type);
+				a.attr("download", 'posts-'+export_time+'.'+ export_type );
 				a.attr("href", link);
 				$("body").append(a);
 				a[0].click();

@@ -23,8 +23,10 @@
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use \PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Tcpdf;
 
 class Cms_Posts_Add_On_Admin {
 
@@ -108,7 +110,8 @@ class Cms_Posts_Add_On_Admin {
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'labels'  => array(
 				'export_posts' => __( 'Export csv', $this->plugin_name ),
-				'export_posts_xlsx' => __( 'Export xlsx', $this->plugin_name )
+				'export_posts_xlsx' => __( 'Export xlsx', $this->plugin_name ),
+				'export_posts_tcpdf' => __( 'Export pdf', $this->plugin_name )
 			)
 		);
 
@@ -154,16 +157,35 @@ class Cms_Posts_Add_On_Admin {
 				endforeach;
 			endfor;
 
-			$fileName = "posts-" . date('Y-m-d-H-i-s') . "." . $type;
+			$sheet->getStyle('A')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+			$sheet->getColumnDimension('B')->setWidth(12);
+			$sheet->getColumnDimension('C')->setWidth(32);
+			$sheet->getColumnDimension('D')->setWidth(12);
+			$sheet->getColumnDimension('E')->setWidth(12);
+			$sheet->getColumnDimension('F')->setWidth(12);
 			
-			$writer = IOFactory::createWriter($spreadsheet, $type);
-			if( 'Xlsx' == $type ) :
-				header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-			else : 
-				header('Content-Type: application/x-www-form-urlencoded');
-			endif;
+			$fileName = "posts-" . date('Y-m-d-H-i-s') . "." . $type;
+
+			switch($type) {
+				case 'Xlsx':
+					header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+					break;
+				case 'Csv':
+					header('Content-Type: application/x-www-form-urlencoded');
+					break;
+				case 'Pdf':
+					header('Content-Type: application/pdf');
+					break;
+				default:
+					header('Content-Type: application/x-www-form-urlencoded');
+					break;
+			}
+			
         	header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
 			header('Cache-Control: max-age=0');
+
+			$final_type = ( 'Pdf' == $type ) ? 'Tcpdf' : $type;
+			$writer = IOFactory::createWriter($spreadsheet, $final_type );
 			$writer->save('php://output');
 
 			die();
